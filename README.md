@@ -40,6 +40,8 @@ While these components are fully functional, they do not include any CSS/styling
 
 ## Usage
 
+### Include library
+
 Include the `capitalisk-log-in` component (full bundle containing all necessary dependencies) into your application (for example):
 
 ```js
@@ -51,6 +53,8 @@ Or for a web page, you can put this inside the `<head></head>` tag:
 ```html
 <script src="/node_modules/capitalisk-auth-client/dist/capitalisk-log-in.js" type="module" async></script>
 ```
+
+### Add the form component
 
 This will allow you to add one or more custom `capitalisk-log-in` elements into your web page or app like this:
 
@@ -79,4 +83,45 @@ For example, the log in form for the saasufy.com (SAS) blockchain is:
     secure="true"
     wallet-address-length="43"
   ></capitalisk-log-in>
+```
+
+### Handle form submission
+
+Example handling inside another Web Component:
+
+```js
+let capitaliskLogIn = this.querySelector('capitalisk-log-in');
+
+// The capitalisk-log-in component emits a submitCredentials event when the user
+// clicks log in; it provides you with account credentials. Then you just need
+// to send those credentials to an API endpoint on your server.
+capitaliskLogIn.addEventListener('submitCredentials', async (event) => {
+  // You can set the form in a loading state which will disable the
+  // submit button.
+  capitaliskLogIn.setAttribute('loading', '');
+  // Clear any previous errors shown in the form.
+  capitaliskLogIn.removeAttribute('error');
+  try {
+    // The event.detail object contains the user's credentials.
+    // You need to pass this object to the CapitaliskAuthProvider
+    // authentiate() method on the server side to authenticate.
+    // Here we're invoking a 'log-in' RPC on a WebSocket to send them
+    // to our server. This could also have been an HTTP request
+    // via AJAX, fetch API or other...
+    let logInResponse = await socket.invoke('log-in', event.detail);
+    console.log('Logged in');
+    // ...
+  } catch (error) {
+    // On error (including authentication failure), you can set the
+    // error attribute on the capitalisk-log-in component to display
+    // it to the user.
+    capitaliskLogIn.setAttribute('error', error.message);
+    // Remember to remove the loading attribute so that the user
+    // can interact with the component again to try again.
+    capitaliskLogIn.removeAttribute('loading');
+
+    return;
+  }
+  // On success you could redirect the user to their dashboard...
+});
 ```
