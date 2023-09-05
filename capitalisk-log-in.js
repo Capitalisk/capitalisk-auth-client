@@ -76,7 +76,6 @@ class CapitaliskLogIn extends HTMLElement {
     let multisigCheckbox = this.querySelector('#is-multisig');
     let multisigIndicator = this.querySelector('.multisig-indicator');
     let errorArea = this.querySelector('.error-area');
-    let submitButton = this.querySelector('.submit-button');
 
     let isFetchingAccount = false;
 
@@ -147,12 +146,10 @@ class CapitaliskLogIn extends HTMLElement {
       if (walletAddressError || passphraseError) {
         return;
       }
-      submitButton.value = 'Loading...';
 
       let walletAddress = this.walletAddress ? this.walletAddress.trim() : null;
       let keyType = multisigCheckbox.checked ? 'multisig' : 'sig';
 
-      this.setAttribute('loading', '');
       this.dispatchEvent(
         new CustomEvent('submitCredentials', {
           detail: {
