@@ -1,5 +1,5 @@
 import './passphrase-input.js';
-import { createClient } from '../node_modules/ldpos-client/module.js';
+import { createClient } from './node_modules/ldpos-client/module.js';
 
 class CapitaliskLogIn extends HTMLElement {
   constructor() {
