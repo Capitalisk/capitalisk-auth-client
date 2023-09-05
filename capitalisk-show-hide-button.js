@@ -1,4 +1,4 @@
-class ShowHideButton extends HTMLElement {
+class CapitaliskShowHideButton extends HTMLElement {
   connectedCallback() {
     this.render();
   }
@@ -21,4 +21,4 @@ class ShowHideButton extends HTMLElement {
   }
 }
 
-window.customElements.define('show-hide-button', ShowHideButton);
+window.customElements.define('capitalisk-show-hide-button', CapitaliskShowHideButton);

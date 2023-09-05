@@ -1,4 +1,4 @@
-import './passphrase-input.js';
+import './capitalisk-passphrase-input.js';
 import { createClient } from './node_modules/ldpos-client/module.js';
 
 class CapitaliskLogIn extends HTMLElement {
@@ -66,7 +66,7 @@ class CapitaliskLogIn extends HTMLElement {
         <div class="form-panel">
           <label for="is-multisig">Multisig:</label> <input id="is-multisig" type="checkbox" disabled /> <span class="multisig-indicator"></span>
         </div>
-        <passphrase-input id="passphrase-input"></passphrase-input>
+        <capitalisk-passphrase-input></capitalisk-passphrase-input>
         <div class="error-area${this.error ? ' error' : ''}">${this.error}</div>
         <input class="submit-button" type="submit" value="${this.loading ? 'Loading...' : 'Log in'}" ${this.loading ? 'disabled ' : ''}/>
       </form>
@@ -120,7 +120,7 @@ class CapitaliskLogIn extends HTMLElement {
       }
     });
 
-    let passphraseInput = this.querySelector('#passphrase-input');
+    let passphraseInput = this.querySelector('capitalisk-passphrase-input');
     passphraseInput.addEventListener('passphraseChange', (event) => {
       this.passphrase = event.detail.passphrase;
     });

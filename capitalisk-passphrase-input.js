@@ -1,13 +1,12 @@
-import './show-hide-button.js';
+import './capitalisk-show-hide-button.js';
 
-class PassphraseInput extends HTMLElement {
+class CapitaliskPassphraseInput extends HTMLElement {
   connectedCallback() {
     this.show = false;
     this.passphraseInputs = [];
     this.passphrase = '';
     for (let i = 0; i < 12; i++) {
       let input = document.createElement('input');
-      input.classList.add('passphrase-input');
       input.setAttribute('type', 'text');
       input.setAttribute('index', i);
       this.bindInputListeners(input);
@@ -127,4 +126,4 @@ class PassphraseInput extends HTMLElement {
   }
 }
 
-window.customElements.define('passphrase-input', PassphraseInput);
+window.customElements.define('capitalisk-passphrase-input', CapitaliskPassphraseInput);
