@@ -63,7 +63,7 @@ This will allow you to add one or more custom `capitalisk-log-in` elements into 
   ></capitalisk-log-in>
 ```
 
-This example above sets up a form for authentication via the main Capitalisk blockchain. If you're running your own Capitalisk node, you could point to it instead simply by changing the `hostname` and `port` attributes.
+This example above sets up a form for authentication via the main Capitalisk blockchain. If you're running your own Capitalisk node, you could point to it instead simply by changing the `hostname` and/or `port` attributes.
 
 Setting up a log in form for any other Capitalisk-based blockchain is just as simple.
 For example, the log in form for the saasufy.com (SAS) blockchain is:
