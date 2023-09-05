@@ -6,7 +6,7 @@ A modular front end toolkit for easily implementing log in using any Capitalisk/
 ## What is this for?
 
 This project provides front end components to allow you to easily extend your app or website to support authentication (log in) via a Capitalisk-based blockchain.
-It's an alternative to the standard email-based authentication which is currently supported by most websites and it saves you having to do the work of setting up a registration page and handling the whole sign up and email verification flow.
+It's an alternative to the standard email-based authentication which is currently supported by most websites and it saves you from having to do the work of setting up a registration page and handling the whole sign up and email verification flow.
 
 The main login form component (`capitalisk-log-in`) can be configured to support authentication via any blockchain built using `ldpos-chain` (Capitalisk's consensus engine).
 
