@@ -49,7 +49,11 @@ class CapitaliskLogIn extends HTMLElement {
     this.ldposClientOptions.networkSymbol = this.getAttribute('network-symbol');
     this.ldposClientOptions.chainModuleName = this.getAttribute('chain-module-name');
     this.ldposClientOptions.secure = this.getAttribute('secure') === 'true';
-    this.walletAddressLength = this.ldposClientOptions.networkSymbol.length + WALLET_ADDRESS_HEX_LENGTH;
+    if (this.ldposClientOptions.networkSymbol) {
+      this.walletAddressLength = this.ldposClientOptions.networkSymbol.length + WALLET_ADDRESS_HEX_LENGTH;
+    } else {
+      this.walletAddressLength = 0;
+    }
     this.ldposClient = createClient(this.ldposClientOptions);
     this.render();
   }
