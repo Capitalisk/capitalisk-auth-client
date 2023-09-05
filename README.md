@@ -1,6 +1,8 @@
 # capitalisk-auth-client
 A modular front end toolkit for easily implementing log in using any Capitalisk/LDPoS blockchain.
 
+![Capitalisk log in form](./images/sample-form-screenshot.png)
+
 ## What is this for?
 
 This project provides front end components to allow you to easily extend your app or website to support authentication (log in) via a Capitalisk-based blockchain.
