@@ -1,6 +1,8 @@
 import './capitalisk-passphrase-input.js';
 import { createClient } from './node_modules/ldpos-client/module.js';
 
+const WALLET_ADDRESS_HEX_LENGTH = 40;
+
 class CapitaliskLogIn extends HTMLElement {
   constructor() {
     super();
@@ -47,7 +49,7 @@ class CapitaliskLogIn extends HTMLElement {
     this.ldposClientOptions.networkSymbol = this.getAttribute('network-symbol');
     this.ldposClientOptions.chainModuleName = this.getAttribute('chain-module-name');
     this.ldposClientOptions.secure = this.getAttribute('secure') === 'true';
-    this.walletAddressLength = Number(this.getAttribute('wallet-address-length'));
+    this.walletAddressLength = this.ldposClientOptions.networkSymbol.length + WALLET_ADDRESS_HEX_LENGTH;
     this.ldposClient = createClient(this.ldposClientOptions);
     this.render();
   }

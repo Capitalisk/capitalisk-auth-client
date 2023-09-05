@@ -65,7 +65,6 @@ This will allow you to add one or more custom `capitalisk-log-in` elements into 
     network-symbol="clsk"
     chain-module-name="capitalisk_chain"
     secure="true"
-    wallet-address-length="44"
   ></capitalisk-log-in>
 ```
 
@@ -81,7 +80,6 @@ For example, the log in form for the saasufy.com (SAS) blockchain is:
     network-symbol="sas"
     chain-module-name="sas_chain"
     secure="true"
-    wallet-address-length="43"
   ></capitalisk-log-in>
 ```
 
