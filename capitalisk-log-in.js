@@ -14,11 +14,30 @@ class CapitaliskLogIn extends HTMLElement {
     this.error = '';
   }
 
+  async connectedCallback() {
+    this.loading = this.hasAttribute('loading');
+    this.error = this.getAttribute('error') || '';
+    this.ldposClientOptions.hostname = this.getAttribute('hostname');
+    this.ldposClientOptions.port = Number(this.getAttribute('port'));
+    this.ldposClientOptions.networkSymbol = this.getAttribute('network-symbol');
+    this.ldposClientOptions.chainModuleName = this.getAttribute('chain-module-name');
+    this.ldposClientOptions.secure = this.getAttribute('secure') === 'true';
+    if (this.ldposClientOptions.networkSymbol) {
+      this.walletAddressLength = this.ldposClientOptions.networkSymbol.length + WALLET_ADDRESS_HEX_LENGTH;
+    } else {
+      this.walletAddressLength = 0;
+    }
+    this.ldposClient = createClient(this.ldposClientOptions);
+    this.render();
+  }
+
   static get observedAttributes() {
     return ['loading', 'error'];
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
+  async attributeChangedCallback(name, oldValue, newValue) {
+    if (!this.ldposClient) return;
+
     if (name === 'loading') {
       this.loading = newValue != null;
       let submitButton = this.querySelector('.submit-button');
@@ -39,23 +58,6 @@ class CapitaliskLogIn extends HTMLElement {
         errorArea.classList.remove('error');
       }
     }
-  }
-
-  async connectedCallback() {
-    this.loading = this.hasAttribute('loading');
-    this.error = this.getAttribute('error') || '';
-    this.ldposClientOptions.hostname = this.getAttribute('hostname');
-    this.ldposClientOptions.port = Number(this.getAttribute('port'));
-    this.ldposClientOptions.networkSymbol = this.getAttribute('network-symbol');
-    this.ldposClientOptions.chainModuleName = this.getAttribute('chain-module-name');
-    this.ldposClientOptions.secure = this.getAttribute('secure') === 'true';
-    if (this.ldposClientOptions.networkSymbol) {
-      this.walletAddressLength = this.ldposClientOptions.networkSymbol.length + WALLET_ADDRESS_HEX_LENGTH;
-    } else {
-      this.walletAddressLength = 0;
-    }
-    this.ldposClient = createClient(this.ldposClientOptions);
-    this.render();
   }
 
   render() {
