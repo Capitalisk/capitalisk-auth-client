@@ -28,6 +28,7 @@
     "ldpos-client": "^11.4.1"
   },
   "devDependencies": {
+    "@rollup/plugin-alias": "^5.0.0",
     "@rollup/plugin-terser": "^0.4.3",
     "rollup": "^3.28.1"
   }

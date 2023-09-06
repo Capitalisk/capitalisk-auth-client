@@ -1,5 +1,5 @@
 import './capitalisk-passphrase-input.js';
-import { createClient } from './node_modules/ldpos-client/module.js';
+import { createClient } from '../ldpos-client/module.js';
 
 const WALLET_ADDRESS_HEX_LENGTH = 40;
 
