@@ -109,7 +109,7 @@ class CapitaliskPassphraseInput extends HTMLElement {
       passphraseContainer.appendChild(element);
     }
 
-    let showHideButton = document.createElement('show-hide-button');
+    let showHideButton = document.createElement('capitalisk-show-hide-button');
     showHideButton.classList.add('passphrase-show-hide-button');
     showHideButton.setAttribute('show', this.show);
 
