@@ -60,7 +60,7 @@ class CapitaliskLogIn extends HTMLElement {
 
   render() {
     this.innerHTML = `
-      <form id="log-in-form" class="dialog">
+      <form class="log-in-form">
         <h2>
           Log in via
           <a
@@ -130,7 +130,7 @@ class CapitaliskLogIn extends HTMLElement {
       this.passphrase = event.detail.passphrase;
     });
 
-    let form = this.querySelector('#log-in-form');
+    let form = this.querySelector('.log-in-form');
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
