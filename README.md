@@ -94,9 +94,9 @@ let capitaliskLogIn = this.querySelector('capitalisk-log-in');
 // clicks log in; it provides you with account credentials. Then you just need
 // to send those credentials to an API endpoint on your server.
 capitaliskLogIn.addEventListener('submitCredentials', async (event) => {
-  // You can set the form in a loading state which will disable the
+  // You can set the form in a disabled state which will disable the
   // submit button.
-  capitaliskLogIn.setAttribute('loading', '');
+  capitaliskLogIn.setAttribute('disabled', '');
   // Clear any previous errors shown in the form.
   capitaliskLogIn.removeAttribute('error');
   try {
@@ -114,12 +114,24 @@ capitaliskLogIn.addEventListener('submitCredentials', async (event) => {
     // error attribute on the capitalisk-log-in component to display
     // it to the user.
     capitaliskLogIn.setAttribute('error', error.message);
-    // Remember to remove the loading attribute so that the user
+    // Remember to remove the disabled attribute so that the user
     // can interact with the component again to try again.
-    capitaliskLogIn.removeAttribute('loading');
+    capitaliskLogIn.removeAttribute('disabled');
 
     return;
   }
   // On success you could redirect the user to their dashboard...
+});
+
+capitaliskLogIn.addEventListener('accountReadyStateChange', (event) => {
+  // ... You can use event.detail.accountReady to check if the
+  // account is ready and valid.
+});
+
+capitaliskLogIn.addEventListener('error', (event) => {
+  // ... You can use event.detail.error to capture errors from
+  // the capitalisk-log-in component. You may set the error attribute
+  // of the component to display errors within it.
+  // The component only shows an error if set via its error attribute.
 });
 ```
