@@ -12,6 +12,7 @@ class CapitaliskLogIn extends HTMLElement {
     this.ldposClientOptions = {};
     this.loading = false;
     this.error = '';
+    this.accountReady = false;
   }
 
   async connectedCallback() {
@@ -60,6 +61,19 @@ class CapitaliskLogIn extends HTMLElement {
     }
   }
 
+  setAccountReadyState(value) {
+    if (value !== this.accountReady) {
+      this.accountReady = value;
+      this.dispatchEvent(
+        new CustomEvent('accountReadyStateChange', {
+          detail: {
+            accountReady: value
+          }
+        })
+      );
+    }
+  }
+
   render() {
     this.innerHTML = `
       <form class="log-in-form">
@@ -93,12 +107,14 @@ class CapitaliskLogIn extends HTMLElement {
         multisigIndicator.classList.remove('error');
         if (!isFetchingAccount) {
           multisigIndicator.classList.add('spinning');
+          this.setAccountReadyState(false);
           multisigIndicator.innerHTML = '&#8635;';
           isFetchingAccount = true;
           let account;
           try {
             account = await this.ldposClient.getAccount(this.walletAddress);
             multisigIndicator.innerHTML = '';
+            this.setAccountReadyState(true);
           } catch (error) {
             console.error(
               new Error(
@@ -108,6 +124,7 @@ class CapitaliskLogIn extends HTMLElement {
             multisigIndicator.classList.add('error');
             multisigIndicator.innerHTML = '!';
             account = {};
+            this.setAccountReadyState(false);
           }
           isFetchingAccount = false;
           multisigIndicator.classList.remove('spinning');
@@ -124,6 +141,7 @@ class CapitaliskLogIn extends HTMLElement {
         multisigIndicator.innerHTML = '';
         multisigCheckbox.setAttribute('disabled', '');
         multisigCheckbox.checked = false;
+        this.setAccountReadyState(false);
       }
     });
 
