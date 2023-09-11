@@ -10,13 +10,15 @@ class CapitaliskLogIn extends HTMLElement {
     this.walletAddress = '';
     this.isMultisigSupported = false;
     this.ldposClientOptions = {};
-    this.loading = false;
+    this.disabled = false;
+    this.submitButtonText = 'Log in';
     this.error = '';
     this.accountReady = false;
   }
 
   async connectedCallback() {
-    this.loading = this.hasAttribute('loading');
+    this.disabled = this.hasAttribute('disabled');
+    this.submitButtonText = this.getAttribute('submit-button-text') || this.submitButtonText;
     this.error = this.getAttribute('error') || '';
     this.ldposClientOptions.hostname = this.getAttribute('hostname');
     this.ldposClientOptions.port = Number(this.getAttribute('port'));
@@ -33,22 +35,24 @@ class CapitaliskLogIn extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['loading', 'error'];
+    return ['disabled', 'error', 'submit-button-text'];
   }
 
   async attributeChangedCallback(name, oldValue, newValue) {
     if (!this.ldposClient) return;
 
-    if (name === 'loading') {
-      this.loading = newValue != null;
+    if (name === 'disabled') {
+      this.disabled = newValue != null;
       let submitButton = this.querySelector('.submit-button');
-      if (this.loading) {
-        submitButton.value = 'Loading...';
+      if (this.disabled) {
         submitButton.setAttribute('disabled', '');
       } else {
-        submitButton.value = 'Log in';
         submitButton.removeAttribute('disabled');
       }
+    } else if (name === 'submit-button-text') {
+      this.submitButtonText = newValue || '';
+      let submitButton = this.querySelector('.submit-button');
+      submitButton.setAttribute('value', this.submitButtonText);
     } else if (name === 'error') {
       this.error = newValue || '';
       let errorArea = this.querySelector('.error-area');
@@ -74,6 +78,16 @@ class CapitaliskLogIn extends HTMLElement {
     }
   }
 
+  dispatchErrorEvent(error) {
+    this.dispatchEvent(
+      new CustomEvent('error', {
+        detail: {
+          error
+        }
+      })
+    );
+  }
+
   render() {
     this.innerHTML = `
       <form class="log-in-form">
@@ -90,7 +104,7 @@ class CapitaliskLogIn extends HTMLElement {
         </div>
         <capitalisk-passphrase-input></capitalisk-passphrase-input>
         <div class="error-area${this.error ? ' error' : ''}">${this.error}</div>
-        <input class="submit-button" type="submit" value="${this.loading ? 'Loading...' : 'Log in'}" ${this.loading ? 'disabled ' : ''}/>
+        <input class="submit-button" type="submit" value="${this.submitButtonText}" ${this.disabled ? 'disabled ' : ''}/>
       </form>
     `;
 
@@ -110,17 +124,14 @@ class CapitaliskLogIn extends HTMLElement {
           this.setAccountReadyState(false);
           multisigIndicator.innerHTML = '&#8635;';
           isFetchingAccount = true;
+          let error;
           let account;
           try {
             account = await this.ldposClient.getAccount(this.walletAddress);
             multisigIndicator.innerHTML = '';
             this.setAccountReadyState(true);
-          } catch (error) {
-            console.error(
-              new Error(
-                `Failed to fetch account because of error: ${error.message}`
-              )
-            );
+          } catch (err) {
+            error = err;
             multisigIndicator.classList.add('error');
             multisigIndicator.innerHTML = '!';
             account = {};
@@ -135,6 +146,13 @@ class CapitaliskLogIn extends HTMLElement {
           } else {
             multisigCheckbox.setAttribute('disabled', '');
             multisigCheckbox.checked = false;
+          }
+          if (error) {
+            let fetchAccountError = new Error(
+              `Failed to fetch account because of error: ${error.message}`
+            );
+            fetchAccountError.name = 'FetchAccountError';
+            this.dispatchErrorEvent(fetchAccountError);
           }
         }
       } else {
@@ -158,18 +176,22 @@ class CapitaliskLogIn extends HTMLElement {
 
       walletAddressInput.classList.remove('error');
       passphraseInput.setAttribute('validate', true);
-      let passphraseError = passphraseInput.getAttribute('error');
-      let walletAddressError = this.walletAddress.length === this.walletAddressLength ?
+      let passphraseErrorMessage = passphraseInput.getAttribute('error');
+      let walletAddressErrorMessage = this.walletAddress.length === this.walletAddressLength ?
         '' : 'Invalid wallet address';
 
-      if (walletAddressError) {
-        console.error(walletAddressError);
+      if (walletAddressErrorMessage) {
+        let walletAddressError = new Error(walletAddressErrorMessage);
+        walletAddressError.name = 'WalletAddressError';
+        this.dispatchErrorEvent(walletAddressError);
         walletAddressInput.classList.add('error');
       }
-      if (passphraseError) {
-        console.error(passphraseError);
+      if (passphraseErrorMessage) {
+        let passphraseError = new Error(passphraseErrorMessage);
+        passphraseError.name = 'PassphraseError';
+        this.dispatchErrorEvent(passphraseError);
       }
-      if (walletAddressError || passphraseError) {
+      if (walletAddressErrorMessage || passphraseErrorMessage) {
         return;
       }
 
