@@ -1,6 +1,6 @@
 {
   "name": "capitalisk-auth-client",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "type": "module",
   "description": "A modular front end toolkit for easily implementing log in using any Capitalisk/LDPoS blockchain.",
   "main": "index.js",
@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/Capitalisk/capitalisk-auth#readme",
   "dependencies": {
-    "ldpos-client": "^12.0.0"
+    "ldpos-client": "^12.0.1"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^5.0.0",
