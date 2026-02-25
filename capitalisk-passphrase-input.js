@@ -3,15 +3,29 @@ import './capitalisk-show-hide-button.js';
 class CapitaliskPassphraseInput extends HTMLElement {
   connectedCallback() {
     this.show = false;
-    this.passphraseInputs = [];
     this.passphrase = '';
-    for (let i = 0; i < 12; i++) {
-      let input = document.createElement('input');
-      input.setAttribute('type', 'text');
-      input.setAttribute('index', i);
-      this.bindInputListeners(input);
-      this.passphraseInputs.push(input);
-    }
+
+    this.passwordInput = document.createElement('input');
+    this.passwordInput.setAttribute('type', 'password');
+    this.passwordInput.classList.add('passphrase-input');
+    this.passwordInput.setAttribute('placeholder', 'Enter your 12-word passphrase');
+    this.passwordInput.addEventListener('input', () => {
+      this.passphrase = this.passwordInput.value.trim().replace(/\s+/g, ' ');
+      this.textInput.value = this.passwordInput.value;
+      this.dispatchPassphraseChange();
+    });
+
+    this.textInput = document.createElement('textarea');
+    this.textInput.classList.add('passphrase-input');
+    this.textInput.setAttribute('rows', '3');
+    this.textInput.style.resize = 'none';
+    this.textInput.setAttribute('placeholder', 'Enter your 12-word passphrase');
+    this.textInput.addEventListener('input', () => {
+      this.passphrase = this.textInput.value.trim().replace(/\s+/g, ' ');
+      this.passwordInput.value = this.textInput.value;
+      this.dispatchPassphraseChange();
+    });
+
     this.render();
   }
 
@@ -23,8 +37,7 @@ class CapitaliskPassphraseInput extends HTMLElement {
     this.render();
   }
 
-  updatePassphrase() {
-    this.passphrase = this.passphraseInputs.map(element => element.value).join(' ');
+  dispatchPassphraseChange() {
     this.dispatchEvent(
       new CustomEvent('passphraseChange', {
         detail: {
@@ -32,53 +45,6 @@ class CapitaliskPassphraseInput extends HTMLElement {
         }
       })
     );
-  }
-
-  bindInputListeners(input) {
-    input.addEventListener('keydown', (event) => {
-      let inputIndex = parseInt(event.target.getAttribute('index'));
-      if (event.keyCode === 8 && event.target.selectionStart <= 0 && event.target.selectionEnd <= 0) {
-        this.passphraseInputs[Math.max(0, inputIndex - 1)].focus();
-        return;
-      }
-      if (event.keyCode === 32) {
-        event.preventDefault();
-        let focusIndex = inputIndex + 1;
-        if (focusIndex < 12) {
-          this.passphraseInputs[focusIndex].focus();
-          this.passphraseInputs[focusIndex].value = '';
-        }
-      }
-    });
-    input.addEventListener('keyup', (event) => {
-      let inputIndex = parseInt(event.target.getAttribute('index'));
-
-      let inputWords = event.target.value.split(' ');
-      if (inputWords.length < 2) {
-        this.updatePassphrase();
-        return;
-      }
-      let focusOffset = 0;
-      if (!inputWords[1]) {
-        focusOffset = -1;
-      }
-
-      for (let i = 0; i < inputWords.length; i++) {
-        let currentIndex = inputIndex + i;
-        if (currentIndex < 12) {
-          this.passphraseInputs[currentIndex].value = inputWords[i];
-        }
-      }
-
-      let focusIndex = inputIndex + inputWords.length + focusOffset;
-      if (focusIndex < 12) {
-        this.passphraseInputs[focusIndex].focus();
-        this.passphraseInputs[focusIndex].value = '';
-      } else {
-        this.passphraseInputs[11].focus();
-      }
-      this.updatePassphrase();
-    });
   }
 
   bindShowHideListeners(showhideButton) {
@@ -96,18 +62,17 @@ class CapitaliskPassphraseInput extends HTMLElement {
     let passphraseContainer = document.createElement('div');
     passphraseContainer.classList.add('passphrase-container');
 
-    let hasErrors = false;
+    let activeInput = this.show ? this.textInput : this.passwordInput;
 
-    for (let element of this.passphraseInputs) {
-      element.setAttribute('type', this.show ? 'text' : 'password');
-      if (validate && !element.value.length) {
-        element.classList.add('error');
-        hasErrors = true;
-      } else {
-        element.classList.remove('error');
-      }
-      passphraseContainer.appendChild(element);
+    let hasErrors = false;
+    if (validate && !activeInput.value.trim().length) {
+      activeInput.classList.add('error');
+      hasErrors = true;
+    } else {
+      activeInput.classList.remove('error');
     }
+
+    passphraseContainer.appendChild(activeInput);
 
     let showHideButton = document.createElement('capitalisk-show-hide-button');
     showHideButton.classList.add('passphrase-show-hide-button');

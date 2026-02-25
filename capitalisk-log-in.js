@@ -115,7 +115,7 @@ class CapitaliskLogIn extends HTMLElement {
 
     let isFetchingAccount = false;
 
-    walletAddressInput.addEventListener('keyup', async (event) => {
+    walletAddressInput.addEventListener('input', async (event) => {
       this.walletAddress = event.target.value;
       if (this.walletAddress.length >= this.walletAddressLength) {
         multisigIndicator.classList.remove('error');
