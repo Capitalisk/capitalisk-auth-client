@@ -111,7 +111,6 @@ class CapitaliskLogIn extends HTMLElement {
     let walletAddressInput = this.querySelector('.wallet-address-input');
     let multisigCheckbox = this.querySelector('#is-multisig');
     let multisigIndicator = this.querySelector('.multisig-indicator');
-    let errorArea = this.querySelector('.error-area');
 
     let isFetchingAccount = false;
 
@@ -172,7 +171,6 @@ class CapitaliskLogIn extends HTMLElement {
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
-      errorArea.textContent = '';
 
       walletAddressInput.classList.remove('error');
       passphraseInput.setAttribute('validate', true);
