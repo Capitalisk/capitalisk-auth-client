@@ -1,6 +1,6 @@
 {
   "name": "capitalisk-auth-client",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "module",
   "description": "A modular front end toolkit for easily implementing log in using any Capitalisk/LDPoS blockchain.",
   "main": "index.js",
